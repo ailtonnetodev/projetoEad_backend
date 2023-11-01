@@ -11,9 +11,11 @@ export interface Course {
 }
 
 
- export interface CourseCreationAttributes extends Optional<Course, 'id' | 'thumbnailUrl' | 'featured' > { } 
+ export interface CourseCreationAttributes 
+  extends Optional<Course, 'id' | 'thumbnailUrl' | 'featured' > { } 
 
-export interface CourseInstance extends Model<Course, CourseCreationAttributes>, Course { } 
+export interface CourseInstance 
+  extends Model<Course, CourseCreationAttributes>, Course { } 
 
 export const Course = sequelize.define<CourseInstance, Course>('Courses', {
     id: {
