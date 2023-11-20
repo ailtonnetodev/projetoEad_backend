@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
-import { CourseService } from "../services/courseService"
+import { courseService } from "../services/courseService"
+import { getPaginationParams } from "../helpers/getPaginationParams"
 
 export const coursesController = {
     featured: async (req: Request, res: Response) => {
         try {
-            const featuredCourses = await CourseService.getRandomFeaturedCourses()
+            const featuredCourses = await courseService.getRandomFeaturedCourses()
             return res.json(featuredCourses)
         } catch (err) {
             if (err instanceof Error) {
@@ -13,9 +14,10 @@ export const coursesController = {
         }
     },
 
+    // GET /courses/newest
     newest: async (req: Request, res: Response) => {
         try {
-           const newestCourses = await CourseService.getTopTenNewest()
+           const newestCourses = await courseService.getTopTenNewest()
           return res.json(newestCourses)
         } catch (err) {
             if (err instanceof Error) {
@@ -24,13 +26,30 @@ export const coursesController = {
         }
     },
 
-     
+    // GET /courses/search?name=
+    search: async (req: Request, res: Response) => {
+        const { name } = req.query
+        const [page, perPage] = getPaginationParams(req.query)
 
+        try {
+            if (typeof name !== 'string') throw new Error('name param must be of type string')
+            const courses = await courseService.findByName(name, page, perPage)
+        return res.json(courses)
+        } catch (err) {
+            if (err instanceof Error) {
+                return res.status(400).json({ message: err.message })
+            }
+        }
+
+    },
+
+
+    // GET /courses/:id
     show: async (req: Request, res: Response) => {
         const { id } = req.params
 
         try {
-            const course = await CourseService.findByIdWithEpisodes(id)
+            const course = await courseService.findByIdWithEpisodes(id)
             return res.json(course)
         } catch (err) {
             if (err instanceof Error) {

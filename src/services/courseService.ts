@@ -1,6 +1,7 @@
+import { Op } from "sequelize"
 import { Course } from "../models"
 
-export const CourseService = {
+export const courseService = {
     findByIdWithEpisodes: async (id: string) => {
         const courseWithEpisodes = await Course.findByPk(id, {
             attributes: [
@@ -52,5 +53,31 @@ export const CourseService = {
         })
 
         return courses
+    },
+
+    findByName: async (name: string, page: number, perPage: number) => {
+        const offset = (page - 1) * perPage
+        const { count, rows } = await Course.findAndCountAll({
+            attributes: [
+                'id',
+                'name',
+                'synopsis',
+                ['thumbnail_url', 'thumbUrl']
+            ],
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`
+                }
+            },
+            limit: perPage,
+            offset
+        })
+
+        return {
+            courses: rows,
+            page,
+            perPage,
+            total: count
+        }
     }
 }
