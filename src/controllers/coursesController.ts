@@ -3,6 +3,7 @@ import { courseService } from "../services/courseService"
 import { getPaginationParams } from "../helpers/getPaginationParams"
 
 export const coursesController = {
+    // GET /courses/featured
     featured: async (req: Request, res: Response) => {
         try {
             const featuredCourses = await courseService.getRandomFeaturedCourses()
@@ -42,7 +43,6 @@ export const coursesController = {
         }
 
     },
-
 
     // GET /courses/:id
     show: async (req: Request, res: Response) => {
