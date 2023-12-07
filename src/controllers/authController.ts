@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { userService } from "../services/userService"
-import { jwtService } from "../models/jwtService"
+import { jwtService } from "../services/jwtService"
 
 export const authController = {
     // POST /auth/register
