@@ -43,7 +43,7 @@ export const userService = {
         return user
     },
 
-    
+
     update: async (id: number, attributes: {
         firstName: string
         lastName: string
@@ -52,6 +52,18 @@ export const userService = {
         email: string
       }) => {
         const [affectedRows, updatedUsers] = await User.update(attributes, { where: { id }, returning: true })
+    
+        return updatedUsers[0]
+      },
+
+      updatePassword: async (id: string | number, password: string) => {
+        const [affectedRows, updatedUsers] = await User.update({
+          password
+        }, {
+          where: { id },
+          individualHooks: true,
+          returning: true
+        })
     
         return updatedUsers[0]
       },
